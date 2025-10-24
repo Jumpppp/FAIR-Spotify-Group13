@@ -1,0 +1,180 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex:      <https://w3id.org/FAIR-course-UT/2025-2026/group13/ont#> .
+
+################################################################
+# TrackShape — validates each Track (schema:MusicRecording)
+################################################################
+ex:TrackShape
+  a sh:NodeShape ;
+  sh:targetClass schema:MusicRecording ;
+  sh:nodeKind sh:IRI ;
+  sh:severity sh:Violation ;
+
+  ################ Identification & description ################
+
+  sh:property [
+    sh:path schema:url ;
+    sh:nodeKind sh:IRI ;
+    sh:message "schema:url must be an IRI (e.g., the Spotify API URL)." ;
+  ] ;
+
+  sh:property [
+    sh:path schema:name ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "Every track must have a schema:name (string)." ;
+  ] ;
+
+  # Accept either xsd:date or xsd:dateTime
+  sh:property [
+    sh:path schema:datePublished ;
+    sh:or (
+      [ sh:datatype xsd:date ]
+      [ sh:datatype xsd:dateTime ]
+    ) ;
+    sh:message "schema:datePublished must be xsd:date or xsd:dateTime." ;
+  ] ;
+
+  ########################### Links ############################
+
+  # byArtist: allow IRIs to Person/MusicGroup OR literal names
+  sh:property [
+    sh:path schema:byArtist ;
+    sh:minCount 1 ;
+    sh:or (
+      [ sh:nodeKind sh:IRI ; sh:class schema:Person ]
+      [ sh:nodeKind sh:IRI ; sh:class schema:MusicGroup ]
+      [ sh:datatype xsd:string ]
+    ) ;
+    sh:message "schema:byArtist must be Person/MusicGroup IRI or a string name (temporary)." ;
+  ] ;
+
+  # inAlbum: MusicAlbum IRI or album title string
+  sh:property [
+    sh:path schema:inAlbum ;
+    sh:or (
+      [ sh:nodeKind sh:IRI ; sh:class schema:MusicAlbum ]
+      [ sh:datatype xsd:string ]
+    ) ;
+    sh:message "schema:inAlbum must be MusicAlbum IRI or a string title (temporary)." ;
+  ] ;
+
+  # isPartOf: MusicPlaylist IRI or playlist name string
+  sh:property [
+    sh:path schema:isPartOf ;
+    sh:or (
+      [ sh:nodeKind sh:IRI ; sh:class schema:MusicPlaylist ]
+      [ sh:datatype xsd:string ]
+    ) ;
+    sh:message "schema:isPartOf must be MusicPlaylist IRI or a string name (temporary)." ;
+  ] ;
+
+  # genre: SKOS Concept IRI or string label
+  sh:property [
+    sh:path schema:genre ;
+    sh:minCount 1 ;
+    sh:or (
+      [ sh:nodeKind sh:IRI ; sh:class skos:Concept ]
+      [ sh:datatype xsd:string ]
+    ) ;
+    sh:message "schema:genre must be a skos:Concept IRI or a string label (temporary)." ;
+  ] ;
+
+  # optional: simple literal subgenre (since no MO)
+  sh:property [
+    sh:path ex:subGenre ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:message "ex:subGenre, if present, must be a single string." ;
+  ] ;
+
+  ###################### Numeric features ######################
+
+  # durationMs: [0, 1,000,000]
+  sh:property [
+    sh:path ex:durationMs ;
+    sh:datatype xsd:double ;
+    sh:minInclusive 0 ; sh:maxInclusive 1000000 ;
+    sh:message "ex:durationMs must be a number in [0, 1e6]." ;
+  ] ;
+
+  # trackPopularity: [0, 100]
+  sh:property [
+    sh:path ex:trackPopularity ;
+    sh:datatype xsd:double ;
+    sh:minInclusive 0 ; sh:maxInclusive 100 ;
+    sh:message "ex:trackPopularity must be a number in [0, 100]." ;
+  ] ;
+
+  # tempo: [0, 250]
+  sh:property [
+    sh:path ex:tempo ;
+    sh:datatype xsd:double ;
+    sh:minInclusive 0 ; sh:maxInclusive 250 ;
+    sh:message "ex:tempo must be a number in [0, 250] bpm." ;
+  ] ;
+
+  # key: [-1, 11]
+  sh:property [
+    sh:path ex:key ;
+    sh:datatype xsd:int ;
+    sh:minInclusive -1 ; sh:maxInclusive 11 ;
+    sh:message "ex:key must be an integer in [-1, 11]." ;
+  ] ;
+
+  # mode: {0,1}
+  sh:property [
+    sh:path ex:mode ;
+    sh:datatype xsd:int ;
+    sh:in ( 0 1 ) ;
+    sh:message "ex:mode must be 0 (minor) or 1 (major)." ;
+  ] ;
+
+  # timeSignature: >= 1
+  sh:property [
+    sh:path ex:timeSignature ;
+    sh:datatype xsd:int ;
+    sh:minInclusive 1 ;
+    sh:message "ex:timeSignature must be an integer >= 1." ;
+  ] ;
+
+  # loudness: [-60, 0]
+  sh:property [
+    sh:path ex:loudness ;
+    sh:datatype xsd:double ;
+    sh:minInclusive -60 ; sh:maxInclusive 0 ;
+    sh:message "ex:loudness must be a number in [-60, 0] dB." ;
+  ] ;
+
+  # [0,1] features
+  sh:property [ sh:path ex:energy           ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:energy must be in [0,1]." ] ;
+  sh:property [ sh:path ex:danceability     ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:danceability must be in [0,1]." ] ;
+  sh:property [ sh:path ex:liveness         ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:liveness must be in [0,1]." ] ;
+  sh:property [ sh:path ex:valence          ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:valence must be in [0,1]." ] ;
+  sh:property [ sh:path ex:speechiness      ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:speechiness must be in [0,1]." ] ;
+  sh:property [ sh:path ex:instrumentalness ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:instrumentalness must be in [0,1]." ] ;
+  sh:property [ sh:path ex:acousticness     ; sh:datatype xsd:double ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:message "ex:acousticness must be in [0,1]." ] .
+  
+
+################################################################
+# GenreShape — validates SKOS Concepts used as genres
+# (Optional but useful if you linked tracks to SKOS concepts)
+################################################################
+ex:GenreConceptShape
+  a sh:NodeShape ;
+  sh:targetClass skos:Concept ;
+  sh:property [
+    sh:path skos:prefLabel ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "skos:Concept must have a skos:prefLabel." ;
+  ] ;
+  sh:property [
+    sh:path skos:broader ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:message "If skos:broader is present, it must be a single IRI (another Concept)." ;
+  ] .
