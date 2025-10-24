@@ -1,0 +1,86 @@
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:<http://purl.org/dc/terms/> .
+@prefix schema: <https://schema.org/> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix ex:     <https://w3id.org/FAIR-course-UT/2025-2026/group13/ont#> .
+@prefix data:   <https://w3id.org/FAIR-course-UT/2025-2026/group13/data#> .
+
+# Make the file an ontology so Protégé opens it cleanly
+<https://w3id.org/FAIR-course-UT/2025-2026/group13/data>
+    a owl:Ontology ;
+    dcterms:title "Group 13 – Example data graph (no slashes in QNames)"@en .
+
+######### Concept scheme + genres (use hyphens, not slashes) #########
+
+ex:SpotifyGenres a skos:ConceptScheme ;
+  skos:prefLabel "Spotify Genres"@en .
+
+data:genre-pop a skos:Concept ;
+  skos:prefLabel "pop"@en ;
+  skos:inScheme ex:SpotifyGenres .
+
+data:genre-mainstream a skos:Concept ;
+  skos:prefLabel "mainstream"@en ;
+  skos:inScheme ex:SpotifyGenres ;
+  skos:broader data:genre-pop .
+
+######### Artists #########
+
+data:artist-lady-gaga a schema:Person ;
+  schema:name "Lady Gaga" .
+
+data:artist-bruno-mars a schema:Person ;
+  schema:name "Bruno Mars" .
+
+######### Album & playlist (IDs kept as literals if you want) #########
+
+data:album-10FLjwfpbxLmW8c25Xyc2N a schema:MusicAlbum ;
+  schema:name "Die With A Smile" ;
+  dcterms:identifier "10FLjwfpbxLmW8c25Xyc2N" .
+
+data:playlist-37i9dQZF1DXcBWIGoYBM5M a schema:MusicPlaylist ;
+  schema:name "Today's Top Hits" ;
+  dcterms:identifier "37i9dQZF1DXcBWIGoYBM5M" .
+
+######### Track (row 1 from your table) #########
+
+data:track-2plbrEY59likOBgBGLjaoe a schema:MusicRecording ;
+  dcterms:identifier "2plbrEY59likOBgBGLjaoe" ;
+  schema:name "Die With A Smile" ;
+  schema:datePublished "2024-08-16T00:00:00Z"^^xsd:dateTime ;
+  schema:url "https://api.spotify.com/v1/tracks/2plbrEY59likOBgBGLjaoe"^^xsd:anyURI ;
+  schema:byArtist  data:artist-lady-gaga , data:artist-bruno-mars ;
+  schema:inAlbum   data:album-10FLjwfpbxLmW8c25Xyc2N ;
+  schema:isPartOf  data:playlist-37i9dQZF1DXcBWIGoYBM5M ;
+  schema:genre     data:genre-mainstream , data:genre-pop ;
+
+  # audio features — literals on Track
+  ex:durationMs        251668 ;
+  ex:trackPopularity   100 ;
+  ex:tempo             157.969 ;
+  ex:loudness          -7.777 ;
+  ex:energy            0.592 ;
+  ex:danceability      0.521 ;
+  ex:liveness          0.122 ;
+  ex:valence           0.535 ;
+  ex:speechiness       0.0304 ;
+  ex:instrumentalness  0.0 ;
+  ex:acousticness      0.308 ;
+  ex:key               6 ;
+  ex:mode              0 ;
+  ex:timeSignature     3 .
+
+######### Dataset node (optional FAIR link) #########
+
+data:dataset a dcterms:Dataset ;
+  dcterms:title "Group 13 – Spotify Top Hits sample"@en .
+
+data:track-2plbrEY59likOBgBGLjaoe dcterms:isPartOf data:dataset .
+data:album-10FLjwfpbxLmW8c25Xyc2N dcterms:isPartOf data:dataset .
+data:artist-lady-gaga dcterms:isPartOf data:dataset .
+data:artist-bruno-mars dcterms:isPartOf data:dataset .
+data:playlist-37i9dQZF1DXcBWIGoYBM5M dcterms:isPartOf data:dataset .
+data:genre-pop dcterms:isPartOf data:dataset .
+data:genre-mainstream dcterms:isPartOf data:dataset .
