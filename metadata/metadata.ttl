@@ -1,1 +1,52 @@
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
+# ---- Project bases (update group number if needed)
+@prefix ont:  <https://w3id.org/FAIR-course-UT/2025-2026/group13/ont#> .
+
+# ---- Main dataset node (you can also add a W3ID rule for /dataset later)
+<https://w3id.org/FAIR-course-UT/2025-2026/group13/dataset>
+  a dcat:Dataset ;
+  dcterms:title "Spotify Top Hits — FAIRified dataset (Group 13)"@en ;
+  dcterms:description "FAIRified version of a Spotify Top Hits subset with tracks, artists, albums, playlists and audio features, modeled using schema.org (MusicRecording, MusicAlbum, MusicPlaylist, Person/MusicGroup) and SKOS concepts for genres."@en ;
+  dcterms:issued "2025-10-24"^^xsd:date ;
+  dcterms:modified "2025-10-24"^^xsd:date ;
+  dcterms:creator [ a foaf:Person ; foaf:name "Jump Srinualnad" ] ;
+  dcterms:publisher [ a foaf:Organization ; foaf:name "University of Twente — FAIR Data Engineering (2025–2026)" ] ;
+  dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+  dcterms:language <http://id.loc.gov/vocabulary/iso639-1/en> ;
+  dcat:keyword "Spotify", "Music", "Audio features", "schema.org", "SKOS", "FAIR" ;
+  dcat:theme <http://purl.org/dc/terms/Music> ;
+  dcat:landingPage <https://github.com/JumpSrinualnad/FAIR-Spotify-Group13> ;
+
+  # Your dataset conforms to your ontology (and optionally to SHACL shapes if you keep them)
+  dcterms:conformsTo <https://w3id.org/FAIR-course-UT/2025-2026/group13/ont> ,
+                     <https://raw.githubusercontent.com/JumpSrinualnad/FAIR-Spotify-Group13/main/data/data-shapes.ttl> ;
+
+  # Two distributions: RDF/Turtle and original CSV
+  dcat:distribution
+      <https://w3id.org/FAIR-course-UT/2025-2026/group13/dist/rdf> ,
+      <https://w3id.org/FAIR-course-UT/2025-2026/group13/dist/original> .
+
+# ---- RDF (Turtle) distribution
+<https://w3id.org/FAIR-course-UT/2025-2026/group13/dist/rdf>
+  a dcat:Distribution ;
+  dcterms:title "FAIRified RDF distribution (Turtle)"@en ;
+  dcterms:format "text/turtle" ;
+  dcat:mediaType "text/turtle" ;
+  # Prefer pointing downloadURL to your W3ID /data (you already set this redirect)
+  dcat:downloadURL <https://w3id.org/FAIR-course-UT/2025-2026/group13/data> ;
+  # accessURL can be the GitHub page for human browsing
+  dcat:accessURL   <https://github.com/JumpSrinualnad/FAIR-Spotify-Group13/blob/main/data/data.ttl> .
+
+# ---- Original CSV distribution
+<https://w3id.org/FAIR-course-UT/2025-2026/group13/dist/original>
+  a dcat:Distribution ;
+  dcterms:title "Original CSV distribution"@en ;
+  dcterms:format "text/csv" ;
+  dcat:mediaType "text/csv" ;
+  # If you later add a W3ID rule for /original, swap this to that W3ID.
+  dcat:downloadURL <https://raw.githubusercontent.com/JumpSrinualnad/FAIR-Spotify-Group13/main/data/original.csv> ;
+  dcat:accessURL   <https://github.com/JumpSrinualnad/FAIR-Spotify-Group13/blob/main/data/original.csv> .
