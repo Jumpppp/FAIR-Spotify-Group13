@@ -1,5 +1,4 @@
-# FAIR-Spotify-Group13
-# FAIR Spotify Dataset — Group 13  
+# FAIR-Spotify  
 ### University of Twente | FAIR Data Engineering Project (2025–2026)
 
 This repository contains the work of **Group 13** for the *FAIR Data Engineering* course at the University of Twente.  
